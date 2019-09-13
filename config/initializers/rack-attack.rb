@@ -2,23 +2,23 @@
 
 class Rack::Attack
   # Always allow requests from localhost
-  # (blacklist & throttles are skipped)
-  whitelist('allow from localhost') do |req|
+  # (blocklist & throttles are skipped)
+  safelist('allow from localhost') do |req|
     # Requests are allowed if the return value is truthy.
     ['127.0.0.1', '::1'].include? req.ip
   end
 
-  whitelist('allow from special IPs') do |req|
+  safelist('allow from special IPs') do |req|
     # IP addresses of known legitimate researchers who might otherwise be
     # caught up in rate limits.
-    if defined? WhitelistedIps::IPS
-      WhitelistedIps::IPS.map { |iprange| iprange.include? req.ip }.any?
+    if defined? SafelistedIps::IPS
+      SafelistedIps::IPS.map { |iprange| iprange.include? req.ip }.any?
     else
       false
     end
   end
 
-  whitelist('allow unlimited requests from API users') do |req|
+  safelist('allow unlimited requests from API users') do |req|
     token = nil
 
     req_params = 'action_dispatch.request.request_parameters'.freeze
@@ -55,7 +55,7 @@ class Rack::Attack
   # This logic prevents rackattack from throttling web requests from
   # researchers and admins. They may still be throttled by the proxy for
   # excessive use, as the proxy does not know that they are logged in.
-  whitelist('allow unlimited requests from permissioned users') do |req|
+  safelist('allow unlimited requests from permissioned users') do |req|
     u = user_from_request(req)
     if u.nil?
       false
