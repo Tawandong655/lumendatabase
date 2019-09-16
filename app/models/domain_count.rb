@@ -1,4 +1,4 @@
-class DomainCount < ActiveRecord::Base
+class DomainCount < ApplicationRecord
   include Elasticsearch::Model
 
   def self.update_count(domain_list)
