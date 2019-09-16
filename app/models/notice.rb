@@ -183,7 +183,7 @@ class Notice < ApplicationRecord
   def self.in_topics(topics)
     joins(topic_assignments: :topic)
       .where('topics.id' => topics)
-      .uniq
+      .distinct
   end
 
   #role can take any string value from EntityNoticeRole::ROLE. For invalid role values a nill set would be returned

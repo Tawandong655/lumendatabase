@@ -35,10 +35,10 @@ describe NoticeSubmissionFinalizer, type: :model do
   it 'increases the count of domains involved in the notice' do
     notice = build(:dmca)
     notice.save
-    
+
     counter_map = {}
-    distinct_domains = infringing_urls_attributes.map { 
-      |x| x[:url].start_with?("http") ? Addressable::URI.parse(x[:url]).domain : PublicSuffix.domain(x[:url]) 
+    distinct_domains = infringing_urls_attributes.map {
+      |x| x[:url].start_with?("http") ? Addressable::URI.parse(x[:url]).domain : PublicSuffix.domain(x[:url])
     }.uniq
     distinct_domains.each do |domain|
       counter_map[domain] = return_count(DomainCount.find_by_domain_name(domain))
@@ -59,7 +59,7 @@ describe NoticeSubmissionFinalizer, type: :model do
       notice, works_attributes: works_attributes(1000)
     ).finalize
   end
-  
+
   private
 
   def works_attributes(number_of_urls = 3)
